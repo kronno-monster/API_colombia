@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Departamentos y Sitios Turísticos</title>
+  <link rel="stylesheet" href="styles.css">
+ 
+</head>
+<body>
+  
+  <nav class="top-nav" aria-label="Navegación principal">
+    <a href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'}); return false;">Inicio</a>
+    <a href="#departments-panel">Departamentos</a>
+    <a href="#sites-panel">Sitios turísticos</a>
+  </nav>
+
+  <header class="site-header" id="top">
+    <h1>10 Departamentos — 10 Sitios Turísticos</h1>
+    <p class="subtitle">Diseño cálido, sencillo y responsive. Imagen a la derecha, fichas a la izquierda.</p>
+  </header>
+
+  
+  <section id="intro-section" class="panel intro-panel" tabindex="0" aria-label="Introducción">
+    <div class="intro-carousel" id="intro-carousel">
+      <div class="intro-slide intro-bg-1" data-index="0">
+        <div class="intro-overlay">
+          <h2>Guía práctica de consumo de APIs – API Colombia</h2>
+          <p><strong>Contexto:</strong> En esta actividad pondremos en práctica el consumo de APIs REST usando la API Colombia, integrando los datos en una página web funcional y bien presentada.</p>
+        </div>
+      </div>
+
+      <div class="intro-slide intro-bg-2" data-index="1">
+        <div class="intro-overlay">
+          <h3>Objetivo general</h3>
+          <p>Desarrollar una página web que consuma datos reales desde la API Colombia, mostrando información de departamentos y sitios turísticos aplicando buenas prácticas.</p>
+        </div>
+      </div>
+
+      <div class="intro-slide intro-bg-3" data-index="2">
+        <div class="intro-overlay">
+          <h3>Organización y Actividades</h3>
+          <p>Grupos (4/5 aprendices). Cada grupo trabajará 10 departamentos y 10 sitios turísticos; investigar endpoints, consumir con fetch/axios y mostrar la info de forma clara.</p>
+        </div>
+      </div>
+
+      <div class="intro-slide intro-bg-4" data-index="3">
+        <div class="intro-overlay">
+          <h3>Requisitos y Evaluación</h3>
+          <p>Técnicos: HTML/CSS/JS, consumo real de la API. Visuales: diseño limpio. Criterios: consumo correcto, visualización, UX, código y trabajo en equipo.</p>
+        </div>
+      </div>
+
+      <div class="intro-controls" aria-hidden="false">
+        <button id="intro-prev" type="button" class="btn small" aria-label="Anterior">‹</button>
+        <button id="intro-next" type="button" class="btn small" aria-label="Siguiente">›</button>
+      </div>
+
+      <div class="intro-indicators" id="intro-indicators" aria-hidden="false">
+
+      </div>
+    </div>
+  </section>
+
+  <main class="main">
+
+    <section class="panel" id="departments-panel" tabindex="0">
+      <h2 class="panel-title">Departamentos</h2>
+      <div class="carousel">
+        <div class="left cards" id="dept-cards">
+       
+        </div>
+
+        <div class="right viewer">
+          <div class="viewer-inner">
+            <h3 id="dept-name">Departamento</h3>
+            <p class="meta"><strong>Capital:</strong> <span id="dept-capital"></span> · <strong>Región:</strong> <span id="dept-region"></span></p>
+            <p id="dept-desc" class="desc"></p>
+            <div class="viewer-controls">
+             
+              <button type="button" class="btn small" id="dept-prev" aria-label="Anterior departamento">‹</button>
+              <button type="button" class="btn small" id="dept-next" aria-label="Siguiente departamento">›</button>
+            </div>
+          </div>
+          <div class="viewer-image">
+            <img id="dept-img" src="images/department1.jpg" alt="Imagen del departamento">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SITIOS TURÍSTICOS -->
+    <!-- Añadido tabindex -->
+    <section class="panel" id="sites-panel" tabindex="0">
+      <h2 class="panel-title">Sitios Turísticos</h2>
+      <div class="carousel">
+        <div class="left cards" id="site-cards">
+          <!-- Fichas generadas por JS -->
+        </div>
+
+        <div class="right viewer">
+          <div class="viewer-inner">
+            <h3 id="site-name">Sitio turístico</h3>
+            <p class="meta"><strong>Departamento:</strong> <span id="site-dept"></span> · <strong>Ciudad:</strong> <span id="site-city"></span></p>
+            <p id="site-desc" class="desc"></p>
+            <div class="viewer-controls">
+              <!-- Añadido type="button" -->
+              <button type="button" class="btn small" id="site-prev" aria-label="Anterior sitio">‹</button>
+              <button type="button" class="btn small" id="site-next" aria-label="Siguiente sitio">›</button>
+            </div>
+          </div>
+          <div class="viewer-image">
+            <img id="site-img" src="images/site1.jpg" alt="Imagen del sitio turístico">
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <small>Generado automáticamente — reemplaza imágenes y textos como necesites.</small>
+  </footer>
+
+  <script>
+    /* ====== Datos iniciales ======
+       Cambia 'image' por el nombre de tu archivo en images/ si lo deseas.
+       Deben ser 10 de cada uno, pero puedes poner menos si estás probando.
+    */
+    const departments = [
+      { name: "Departamento 1", capital: "Capital 1", region: "Región A", description: "Descripción breve del departamento 1.", image: "tolima.png" },
+      { name: "Departamento 2", capital: "Capital 2", region: "Región B", description: "Descripción breve del departamento 2.", image: "images/department2.jpg" },
+      { name: "Departamento 3", capital: "Capital 3", region: "Región C", description: "Descripción breve del departamento 3.", image: "images/department3.jpg" },
+      { name: "Departamento 4", capital: "Capital 4", region: "Región D", description: "Descripción breve del departamento 4.", image: "images/department4.jpg" },
+      { name: "Departamento 5", capital: "Capital 5", region: "Región E", description: "Descripción breve del departamento 5.", image: "images/department5.jpg" },
+      { name: "Departamento 6", capital: "Capital 6", region: "Región F", description: "Descripción breve del departamento 6.", image: "images/department6.jpg" },
+      { name: "Departamento 7", capital: "Capital 7", region: "Región G", description: "Descripción breve del departamento 7.", image: "images/department7.jpg" },
+      { name: "Departamento 8", capital: "Capital 8", region: "Región H", description: "Descripción breve del departamento 8.", image: "images/department8.jpg" },
+      { name: "Departamento 9", capital: "Capital 9", region: "Región I", description: "Descripción breve del departamento 9.", image: "images/department9.jpg" },
+      { name: "Departamento 10", capital: "Capital 10", region: "Región J", description: "Descripción breve del departamento 10.", image: "images/department10.jpg" },
+    ];
+
+    const sites = [
+      { name: "Sitio 1", dept: "Departamento 1", city: "Ciudad A", description: "Descripción corta del sitio 1.", image: "images/site1.jpg" },
+      { name: "Sitio 2", dept: "Departamento 2", city: "Ciudad B", description: "Descripción corta del sitio 2.", image: "images/site2.jpg" },
+      { name: "Sitio 3", dept: "Departamento 3", city: "Ciudad C", description: "Descripción corta del sitio 3.", image: "images/site3.jpg" },
+      { name: "Sitio 4", dept: "Departamento 4", city: "Ciudad D", description: "Descripción corta del sitio 4.", image: "images/site4.jpg" },
+      { name: "Sitio 5", dept: "Departamento 5", city: "Ciudad E", description: "Descripción corta del sitio 5.", image: "images/site5.jpg" },
+      { name: "Sitio 6", dept: "Departamento 6", city: "Ciudad F", description: "Descripción corta del sitio 6.", image: "images/site6.jpg" },
+      { name: "Sitio 7", dept: "Departamento 7", city: "Ciudad G", description: "Descripción corta del sitio 7.", image: "images/site7.jpg" },
+      { name: "Sitio 8", dept: "Departamento 8", city: "Ciudad H", description: "Descripción corta del sitio 8.", image: "images/site8.jpg" },
+      { name: "Sitio 9", dept: "Departamento 9", city: "Ciudad I", description: "Descripción corta del sitio 9.", image: "images/site9.jpg" },
+      { name: "Sitio 10", dept: "Departamento 10", city: "Ciudad J", description: "Descripción corta del sitio 10.", image: "images/site10.jpg" },
+    ];
+
+    // ======== DEPARTAMENTOS: renderizado y lógica ========
+    const deptCardsContainer = document.getElementById('dept-cards');
+    const deptName = document.getElementById('dept-name');
+    const deptCapital = document.getElementById('dept-capital');
+    const deptRegion = document.getElementById('dept-region');
+    const deptDesc = document.getElementById('dept-desc');
+    const deptImg = document.getElementById('dept-img');
+    const deptPrev = document.getElementById('dept-prev');
+    const deptNext = document.getElementById('dept-next');
+
+    let currentDept = 0;
+
+    function renderDeptCards() {
+      deptCardsContainer.innerHTML = '';
+      departments.forEach((d, i) => {
+        const btn = document.createElement('button');
+        // Asegurar que sea botón (evita comportamientos por defecto)
+        btn.type = 'button';
+        btn.className = 'card';
+        btn.setAttribute('aria-pressed','false');
+        btn.innerHTML = `<strong>${d.name}</strong><span class="card-sub">${d.capital} · ${d.region}</span>`;
+        btn.addEventListener('click', () => { setDept(i); });
+        btn.setAttribute('data-index', i);
+        deptCardsContainer.appendChild(btn);
+      });
+    }
+
+    function setDept(index) {
+      currentDept = (index + departments.length) % departments.length;
+      const d = departments[currentDept];
+      deptName.textContent = d.name;
+      deptCapital.textContent = d.capital;
+      deptRegion.textContent = d.region;
+      deptDesc.textContent = d.description;
+      deptImg.src = d.image;
+      deptImg.alt = `Imagen de ${d.name}`;
+      // marca visual en la ficha + accesibilidad
+      [...deptCardsContainer.children].forEach((c) => {
+        const match = Number(c.getAttribute('data-index')) === currentDept;
+        c.classList.toggle('active', match);
+        c.setAttribute('aria-pressed', match ? 'true' : 'false');
+      });
+    }
+
+    deptPrev.addEventListener('click', () => setDept(currentDept - 1));
+    deptNext.addEventListener('click', () => setDept(currentDept + 1));
+
+    // ======== SITIOS: renderizado y lógica ========
+    const siteCardsContainer = document.getElementById('site-cards');
+    const siteName = document.getElementById('site-name');
+    const siteDept = document.getElementById('site-dept');
+    const siteCity = document.getElementById('site-city');
+    const siteDesc = document.getElementById('site-desc');
+    const siteImg = document.getElementById('site-img');
+    const sitePrev = document.getElementById('site-prev');
+    const siteNext = document.getElementById('site-next');
+
+    let currentSite = 0;
+
+    function renderSiteCards() {
+      siteCardsContainer.innerHTML = '';
+      sites.forEach((s, i) => {
+        const btn = document.createElement('button');
+        // Asegurar que sea botón
+        btn.type = 'button';
+        btn.className = 'card';
+        btn.setAttribute('aria-pressed','false');
+        btn.innerHTML = `<strong>${s.name}</strong><span class="card-sub">${s.dept} · ${s.city}</span>`;
+        btn.addEventListener('click', () => { setSite(i); });
+        btn.setAttribute('data-index', i);
+        siteCardsContainer.appendChild(btn);
+      });
+    }
+
+    function setSite(index) {
+      currentSite = (index + sites.length) % sites.length;
+      const s = sites[currentSite];
+      siteName.textContent = s.name;
+      siteDept.textContent = s.dept;
+      siteCity.textContent = s.city;
+      siteDesc.textContent = s.description;
+      siteImg.src = s.image;
+      siteImg.alt = `Imagen de ${s.name}`;
+      [...siteCardsContainer.children].forEach((c) => {
+        const match = Number(c.getAttribute('data-index')) === currentSite;
+        c.classList.toggle('active', match);
+        c.setAttribute('aria-pressed', match ? 'true' : 'false');
+      });
+    }
+
+    // ======= CARRUSEL INTRO (Inicio) =======
+    (function(){
+      const slides = Array.from(document.querySelectorAll('#intro-carousel .intro-slide'));
+      const prevBtn = document.getElementById('intro-prev');
+      const nextBtn = document.getElementById('intro-next');
+      const indicators = document.getElementById('intro-indicators');
+      let idx = 0;
+
+      function renderIndicators(){
+        if(!indicators) return;
+        indicators.innerHTML = '';
+        slides.forEach((s,i)=> {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'intro-ind';
+          btn.setAttribute('data-index', i);
+          btn.setAttribute('aria-label', `Ir a la diapositiva ${i+1}`);
+          btn.addEventListener('click', ()=> setSlide(i));
+          indicators.appendChild(btn);
+        });
+      }
+
+      function setSlide(i){
+        idx = (i + slides.length) % slides.length;
+        slides.forEach((s,si)=>{
+          const visible = si === idx;
+          s.style.opacity = visible ? '1' : '0';
+          s.style.pointerEvents = visible ? 'auto' : 'none';
+          s.setAttribute('aria-hidden', visible ? 'false' : 'true');
+        });
+        Array.from(indicators.children).forEach((b,bi)=> b.classList.toggle('active', bi===idx));
+      }
+
+      prevBtn && prevBtn.addEventListener('click', ()=> setSlide(idx-1));
+      nextBtn && nextBtn.addEventListener('click', ()=> setSlide(idx+1));
+
+      // teclado: izquierda/derecha cuando intro enfocado
+      const introSection = document.getElementById('intro-section');
+      introSection && introSection.addEventListener('keydown', (e)=>{
+        if(e.key === 'ArrowLeft') setSlide(idx-1);
+        if(e.key === 'ArrowRight') setSlide(idx+1);
+      });
+
+      // inicializar
+      renderIndicators();
+      setSlide(0);
+    })();
+
+    // Inicializar todo
+    renderDeptCards();
+    setDept(0);
+    renderSiteCards();
+    setSite(0);
+
+    // Accesibilidad básica: cambiar con teclas izquierda/derecha cuando el focus esté en el panel
+    document.getElementById('departments-panel').addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') setDept(currentDept - 1);
+      if (e.key === 'ArrowRight') setDept(currentDept + 1);
+    });
+    document.getElementById('sites-panel').addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') setSite(currentSite - 1);
+      if (e.key === 'ArrowRight') setSite(currentSite + 1);
+    });
+  </script>
+</body>
+</html>
