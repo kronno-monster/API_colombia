@@ -17,51 +17,10 @@
 
   <header class="site-header" id="top">
     <h1>10 Departamentos — 10 Sitios Turísticos</h1>
-    <p class="subtitle">Diseño cálido, sencillo y responsive. Imagen a la derecha, fichas a la izquierda.</p>
+    <p class="subtitle"></p>
   </header>
 
   
-  <section id="intro-section" class="panel intro-panel" tabindex="0" aria-label="Introducción">
-    <div class="intro-carousel" id="intro-carousel">
-      <div class="intro-slide intro-bg-1" data-index="0">
-        <div class="intro-overlay">
-          <h2>Guía práctica de consumo de APIs – API Colombia</h2>
-          <p><strong>Contexto:</strong> En esta actividad pondremos en práctica el consumo de APIs REST usando la API Colombia, integrando los datos en una página web funcional y bien presentada.</p>
-        </div>
-      </div>
-
-      <div class="intro-slide intro-bg-2" data-index="1">
-        <div class="intro-overlay">
-          <h3>Objetivo general</h3>
-          <p>Desarrollar una página web que consuma datos reales desde la API Colombia, mostrando información de departamentos y sitios turísticos aplicando buenas prácticas.</p>
-        </div>
-      </div>
-
-      <div class="intro-slide intro-bg-3" data-index="2">
-        <div class="intro-overlay">
-          <h3>Organización y Actividades</h3>
-          <p>Grupos (4/5 aprendices). Cada grupo trabajará 10 departamentos y 10 sitios turísticos; investigar endpoints, consumir con fetch/axios y mostrar la info de forma clara.</p>
-        </div>
-      </div>
-
-      <div class="intro-slide intro-bg-4" data-index="3">
-        <div class="intro-overlay">
-          <h3>Requisitos y Evaluación</h3>
-          <p>Técnicos: HTML/CSS/JS, consumo real de la API. Visuales: diseño limpio. Criterios: consumo correcto, visualización, UX, código y trabajo en equipo.</p>
-        </div>
-      </div>
-
-      <div class="intro-controls" aria-hidden="false">
-        <button id="intro-prev" type="button" class="btn small" aria-label="Anterior">‹</button>
-        <button id="intro-next" type="button" class="btn small" aria-label="Siguiente">›</button>
-      </div>
-
-      <div class="intro-indicators" id="intro-indicators" aria-hidden="false">
-
-      </div>
-    </div>
-  </section>
-
   <main class="main">
 
     <section class="panel" id="departments-panel" tabindex="0">
@@ -122,37 +81,225 @@
   </footer>
 
   <script>
-    /* ====== Datos iniciales ======
-       Cambia 'image' por el nombre de tu archivo en images/ si lo deseas.
-       Deben ser 10 de cada uno, pero puedes poner menos si estás probando.
-    */
-    const departments = [
-      { name: "Departamento 1", capital: "Capital 1", region: "Región A", description: "Descripción breve del departamento 1.", image: "tolima.png" },
-      { name: "Departamento 2", capital: "Capital 2", region: "Región B", description: "Descripción breve del departamento 2.", image: "images/department2.jpg" },
-      { name: "Departamento 3", capital: "Capital 3", region: "Región C", description: "Descripción breve del departamento 3.", image: "images/department3.jpg" },
-      { name: "Departamento 4", capital: "Capital 4", region: "Región D", description: "Descripción breve del departamento 4.", image: "images/department4.jpg" },
-      { name: "Departamento 5", capital: "Capital 5", region: "Región E", description: "Descripción breve del departamento 5.", image: "images/department5.jpg" },
-      { name: "Departamento 6", capital: "Capital 6", region: "Región F", description: "Descripción breve del departamento 6.", image: "images/department6.jpg" },
-      { name: "Departamento 7", capital: "Capital 7", region: "Región G", description: "Descripción breve del departamento 7.", image: "images/department7.jpg" },
-      { name: "Departamento 8", capital: "Capital 8", region: "Región H", description: "Descripción breve del departamento 8.", image: "images/department8.jpg" },
-      { name: "Departamento 9", capital: "Capital 9", region: "Región I", description: "Descripción breve del departamento 9.", image: "images/department9.jpg" },
-      { name: "Departamento 10", capital: "Capital 10", region: "Región J", description: "Descripción breve del departamento 10.", image: "images/department10.jpg" },
-    ];
+    // helpers para extraer texto cuando la API devuelve objetos/arrays
+    function getStringField(v){
+      if (v == null) return '';
+      if (typeof v === 'string') return v.trim();
+      if (typeof v === 'number') return String(v);
+      if (Array.isArray(v) && v.length) return getStringField(v[0]);
+      if (typeof v === 'object'){
+        const keys = ['es','es_CO','en','en_US','name','nombre','title','titulo','label','value','text'];
+        for (const k of keys) if (v[k]) return getStringField(v[k]);
+        for (const k in v){
+          if (typeof v[k] === 'string') return v[k].trim();
+          if (typeof v[k] === 'object'){
+            const s = getStringField(v[k]);
+            if (s) return s;
+          }
+        }
+      }
+      return '';
+    }
 
-    const sites = [
-      { name: "Sitio 1", dept: "Departamento 1", city: "Ciudad A", description: "Descripción corta del sitio 1.", image: "images/site1.jpg" },
-      { name: "Sitio 2", dept: "Departamento 2", city: "Ciudad B", description: "Descripción corta del sitio 2.", image: "images/site2.jpg" },
-      { name: "Sitio 3", dept: "Departamento 3", city: "Ciudad C", description: "Descripción corta del sitio 3.", image: "images/site3.jpg" },
-      { name: "Sitio 4", dept: "Departamento 4", city: "Ciudad D", description: "Descripción corta del sitio 4.", image: "images/site4.jpg" },
-      { name: "Sitio 5", dept: "Departamento 5", city: "Ciudad E", description: "Descripción corta del sitio 5.", image: "images/site5.jpg" },
-      { name: "Sitio 6", dept: "Departamento 6", city: "Ciudad F", description: "Descripción corta del sitio 6.", image: "images/site6.jpg" },
-      { name: "Sitio 7", dept: "Departamento 7", city: "Ciudad G", description: "Descripción corta del sitio 7.", image: "images/site7.jpg" },
-      { name: "Sitio 8", dept: "Departamento 8", city: "Ciudad H", description: "Descripción corta del sitio 8.", image: "images/site8.jpg" },
-      { name: "Sitio 9", dept: "Departamento 9", city: "Ciudad I", description: "Descripción corta del sitio 9.", image: "images/site9.jpg" },
-      { name: "Sitio 10", dept: "Departamento 10", city: "Ciudad J", description: "Descripción corta del sitio 10.", image: "images/site10.jpg" },
-    ];
+    // antiguo pickImage -> reemplazado por getImageUrl más robusto
+    function getImageUrl(obj){
+      if (!obj) return '';
+      // si es string
+      if (typeof obj === 'string') {
+        const s = obj.trim();
+        if (!s) return '';
+        return s;
+      }
+      // si es array, intentar extraer del primer elemento recursivamente
+      if (Array.isArray(obj) && obj.length) return getImageUrl(obj[0]);
 
-    // ======== DEPARTAMENTOS: renderizado y lógica ========
+      // si es objeto, buscar propiedades comunes
+      if (typeof obj === 'object') {
+        const candidates = ['url', 'src', 'imageUrl', 'imagen', 'photo', 'path', 'href', 'link'];
+        for (const k of candidates){
+          if (obj[k]) {
+            const v = getImageUrl(obj[k]);
+            if (v) return v;
+          }
+        }
+        // campos anidados (ej. { photo: { url: '...' } })
+        for (const k in obj){
+          if (obj[k]) {
+            const v = getImageUrl(obj[k]);
+            if (v) return v;
+          }
+        }
+      }
+      return '';
+    }
+
+    // lookup corto (sin cambios)
+    const departmentLookup = {
+      "amazonas": { capital: "Leticia", region: "Amazonas" },
+      "antioquia": { capital: "Medellín", region: "Antioquia" },
+      "arauca": { capital: "Arauca", region: "Orinoquía" },
+      "atlántico": { capital: "Barranquilla", region: "Caribe" },
+      "bolívar": { capital: "Cartagena", region: "Caribe" },
+      "boyacá": { capital: "Tunja", region: "Andina" },
+      "caldas": { capital: "Manizales", region: "Andina" },
+      "caquetá": { capital: "Florencia", region: "Amazonas" },
+      "casanare": { capital: "Yopal", region: "Orinoquía" },
+      "cauca": { capital: "Popayán", region: "Pacífico" },
+      "cesar": { capital: "Valledupar", region: "Caribe" },
+      "chocó": { capital: "Quibdó", region: "Pacífico" },
+      "córdoba": { capital: "Montería", region: "Caribe" },
+      "cundinamarca": { capital: "Bogotá D.C.", region: "Andina" },
+      "huila": { capital: "Neiva", region: "Andina" },
+      "la guajira": { capital: "Riohacha", region: "Caribe" },
+      "magdalena": { capital: "Santa Marta", region: "Caribe" },
+      "meta": { capital: "Villavicencio", region: "Orinoquía" },
+      "nariño": { capital: "Pasto", region: "Pacífico" },
+      "norte de santander": { capital: "Cúcuta", region: "Andina" },
+      "quindío": { capital: "Armenia", region: "Andina" },
+      "risaralda": { capital: "Pereira", region: "Andina" },
+      "santander": { capital: "Bucaramanga", region: "Andina" },
+      "sucre": { capital: "Sincelejo", region: "Caribe" },
+      "tolima": { capital: "Ibagué", region: "Andina" },
+      "valle del cauca": { capital: "Cali", region: "Pacífico" },
+      "san andrés y providencia": { capital: "San Andrés", region: "Insular" },
+    };
+
+    function normalizeName(n){ return String(n || '').trim().toLowerCase(); }
+
+    // datos
+    let departments = [];
+    let sites = [];
+
+    // Guardar también un id/código cuando exista para permitir matching por id
+    async function fetchDepartments(){
+      try {
+        const res = await fetch('https://api-colombia.com/api/v1/Department');
+        if (!res.ok) throw new Error('Network response was not ok');
+        const payload = await res.json();
+        const items = Array.isArray(payload) ? payload : (payload.data || []);
+        departments = items.slice(0, 10).map((d, i) => {
+          const name = getStringField(d.name) || getStringField(d.nombre) || `Departamento ${i+1}`;
+          const id = d.id || d._id || d.code || d.codigo || d.department_id || '';
+          let capital = getStringField(d.capital) || getStringField(d.capital_city) || '';
+          let region = getStringField(d.region) || getStringField(d.region_name) || '';
+          // obtener imagen desde distintos formatos que pueda devolver la API
+          const imgFromApi = getImageUrl(d.image || d.photo || d.flag || d.media || d.images || d.photos || d.imagenes);
+          const img = imgFromApi || `images/department${(i%10)+1}.jpg`;
+          const lookup = departmentLookup[normalizeName(name)];
+          if(lookup){
+            if(!capital) capital = lookup.capital || '';
+            if(!region) region = lookup.region || '';
+          }
+          return {
+            id,
+            name,
+            capital: capital || '—',
+            region: region || '—',
+            description: getStringField(d.description) || getStringField(d.descripcion) || '',
+            image: img
+          };
+        });
+      } catch (err) {
+        console.error('Error cargando departamentos:', err);
+        departments = [];
+      }
+    }
+
+    // Buscar departamento por id o por nombre parcial
+    function findDeptByIdOrName(val){
+      if(!val) return null;
+      const v = String(val).trim().toLowerCase();
+      // intentar por id/código
+      for(const dep of departments){
+        if(!dep) continue;
+        if(dep.id && String(dep.id).toLowerCase() === v) return dep.name;
+      }
+      // intentar por nombre exacto/ parcial
+      for(const dep of departments){
+        const depName = normalizeName(dep.name);
+        if(!depName) continue;
+        if(depName === v || depName.includes(v) || v.includes(depName)) return dep.name;
+      }
+      return null;
+    }
+
+    async function fetchSites(){
+      try {
+        const res = await fetch('https://api-colombia.com/api/v1/TouristicAttraction');
+        if (!res.ok) throw new Error('Network response was not ok');
+        const payload = await res.json();
+        const items = Array.isArray(payload) ? payload : (payload.data || []);
+        sites = items.slice(0, 10).map((s, i) => {
+          const name = getStringField(s.name) || getStringField(s.nombre) || `Sitio ${i+1}`;
+          const city = getStringField(s.city) || getStringField(s.ciudad) || getStringField(s.municipality) || getStringField(s.municipio) || '';
+          // obtener imagen desde distintos formatos que pueda devolver la API
+          const imgFromApi = getImageUrl(s.image || s.photo || s.media || s.images || s.photos || s.imagenes);
+          const img = imgFromApi || `images/site${(i%10)+1}.jpg`;
+          const deptField = s.department || s.departmentName || s.departamento || s.department_id || s.idDepartment || s.departmentCode || '';
+          const deptIdField = s.department_id || s.idDepartment || s.departmentId || s.department_code || '';
+          return {
+            raw: s,
+            name,
+            deptRaw: getStringField(deptField) || '',
+            deptIdRaw: getStringField(deptIdField) || '',
+            city: city || '—',
+            description: getStringField(s.description) || getStringField(s.descripcion) || '',
+            image: img
+          };
+        });
+
+        // resolver departamentos (igual que antes)
+        sites = sites.map((si) => {
+          let resolved = '';
+          if(si.deptIdRaw){
+            resolved = findDeptByIdOrName(si.deptIdRaw);
+          }
+          if(!resolved && si.deptRaw){
+            resolved = findDeptByIdOrName(si.deptRaw);
+          }
+          if(!resolved){
+            const text = [getStringField(si.raw.name), getStringField(si.raw.nombre), getStringField(si.raw.description), getStringField(si.raw.descripcion)].filter(Boolean).join(' ').toLowerCase();
+            if(text){
+              for(const dep of departments){
+                const depName = normalizeName(dep.name);
+                if(depName && (text.includes(depName) || text.includes(depName.split(' ')[0]))) { resolved = dep.name; break; }
+              }
+            }
+          }
+          si.dept = resolved || si.deptRaw || '—';
+          return si;
+        });
+
+      } catch (err) {
+        console.error('Error cargando sitios turísticos:', err);
+        sites = [];
+      }
+    }
+
+    // Asegura que la ruta tenga carpeta images/ si el valor es solo un nombre de archivo
+    function normalizeImagePath(p){
+      if(!p) return '';
+      p = String(p).trim();
+      if(!p) return '';
+      // si ya tiene protocolo o slash, devolver tal cual
+      if (/^(https?:)?\/\//.test(p) || p.includes('/')) return p;
+      return `images/${p}`;
+    }
+
+    // Asigna src a un <img> y aplica fallback en caso de error
+    function setImageWithFallback(imgEl, src, fallback){
+      if(!imgEl) return;
+      const finalSrc = normalizeImagePath(src) || normalizeImagePath(fallback);
+      imgEl.src = finalSrc;
+      // remover listeners previos para evitar múltiples handlers
+      imgEl.onerror = null;
+      imgEl.addEventListener('error', function onErr(){
+        imgEl.removeEventListener('error', onErr);
+        imgEl.src = normalizeImagePath(fallback);
+      });
+    }
+
+    // render + lógica (se mantienen funciones previas pero usando los campos corregidos)
     const deptCardsContainer = document.getElementById('dept-cards');
     const deptName = document.getElementById('dept-name');
     const deptCapital = document.getElementById('dept-capital');
@@ -162,44 +309,6 @@
     const deptPrev = document.getElementById('dept-prev');
     const deptNext = document.getElementById('dept-next');
 
-    let currentDept = 0;
-
-    function renderDeptCards() {
-      deptCardsContainer.innerHTML = '';
-      departments.forEach((d, i) => {
-        const btn = document.createElement('button');
-        // Asegurar que sea botón (evita comportamientos por defecto)
-        btn.type = 'button';
-        btn.className = 'card';
-        btn.setAttribute('aria-pressed','false');
-        btn.innerHTML = `<strong>${d.name}</strong><span class="card-sub">${d.capital} · ${d.region}</span>`;
-        btn.addEventListener('click', () => { setDept(i); });
-        btn.setAttribute('data-index', i);
-        deptCardsContainer.appendChild(btn);
-      });
-    }
-
-    function setDept(index) {
-      currentDept = (index + departments.length) % departments.length;
-      const d = departments[currentDept];
-      deptName.textContent = d.name;
-      deptCapital.textContent = d.capital;
-      deptRegion.textContent = d.region;
-      deptDesc.textContent = d.description;
-      deptImg.src = d.image;
-      deptImg.alt = `Imagen de ${d.name}`;
-      // marca visual en la ficha + accesibilidad
-      [...deptCardsContainer.children].forEach((c) => {
-        const match = Number(c.getAttribute('data-index')) === currentDept;
-        c.classList.toggle('active', match);
-        c.setAttribute('aria-pressed', match ? 'true' : 'false');
-      });
-    }
-
-    deptPrev.addEventListener('click', () => setDept(currentDept - 1));
-    deptNext.addEventListener('click', () => setDept(currentDept + 1));
-
-    // ======== SITIOS: renderizado y lógica ========
     const siteCardsContainer = document.getElementById('site-cards');
     const siteName = document.getElementById('site-name');
     const siteDept = document.getElementById('site-dept');
@@ -209,102 +318,87 @@
     const sitePrev = document.getElementById('site-prev');
     const siteNext = document.getElementById('site-next');
 
+    let currentDept = 0;
     let currentSite = 0;
 
-    function renderSiteCards() {
-      siteCardsContainer.innerHTML = '';
-      sites.forEach((s, i) => {
+    function renderDeptCards(){
+      deptCardsContainer.innerHTML = '';
+      departments.forEach((d,i)=>{
+        const imgSrc = normalizeImagePath(d.image) || `images/department${(i%10)+1}.jpg`;
         const btn = document.createElement('button');
-        // Asegurar que sea botón
-        btn.type = 'button';
-        btn.className = 'card';
-        btn.setAttribute('aria-pressed','false');
-        btn.innerHTML = `<strong>${s.name}</strong><span class="card-sub">${s.dept} · ${s.city}</span>`;
-        btn.addEventListener('click', () => { setSite(i); });
-        btn.setAttribute('data-index', i);
+        btn.type='button'; btn.className='card'; btn.setAttribute('data-index',i);
+        // construir elemento img y usar fallback
+        btn.innerHTML = `<img class="card-img" src="${imgSrc}" alt="${d.name}"><div><strong>${d.name}</strong><span class="card-sub">${d.capital} · ${d.region}</span></div>`;
+        // asegurar fallback si la imagen falla
+        const tmpImg = btn.querySelector('.card-img');
+        setImageWithFallback(tmpImg, d.image, `images/department${(i%10)+1}.jpg`);
+        btn.addEventListener('click',()=> setDept(i));
+        deptCardsContainer.appendChild(btn);
+      });
+    }
+
+    function setDept(index){
+      if(!departments.length) return;
+      currentDept = (index + departments.length) % departments.length;
+      const d = departments[currentDept];
+      deptName.textContent = d.name;
+      deptCapital.textContent = d.capital || '—';
+      deptRegion.textContent = d.region || '—';
+      deptDesc.textContent = d.description || '';
+      // usar función para asignar imagen con fallback
+      setImageWithFallback(deptImg, d.image, `images/department${(currentDept%10)+1}.jpg`);
+      deptImg.alt = `Imagen de ${d.name}`;
+      [...deptCardsContainer.children].forEach((c)=> {
+        const match = Number(c.getAttribute('data-index'))===currentDept;
+        c.classList.toggle('active', match);
+        if(match) c.scrollIntoView({behavior:'smooth', block:'center'});
+      });
+    }
+    deptPrev && deptPrev.addEventListener('click', ()=> setDept(currentDept-1));
+    deptNext && deptNext.addEventListener('click', ()=> setDept(currentDept+1));
+
+    // ===== sitios =====
+    function renderSiteCards(){
+      siteCardsContainer.innerHTML = '';
+      sites.forEach((s,i)=>{
+        const imgSrc = normalizeImagePath(s.image) || `images/site${(i%10)+1}.jpg`;
+        const btn = document.createElement('button');
+        btn.type='button'; btn.className='card'; btn.setAttribute('data-index',i);
+        const deptText = s.dept || '—'; const cityText = s.city || '—';
+        btn.innerHTML = `<img class="card-img" src="${imgSrc}" alt="${s.name}"><div><strong>${s.name}</strong><span class="card-sub">${deptText} · ${cityText}</span></div>`;
+        const tmpImg = btn.querySelector('.card-img');
+        setImageWithFallback(tmpImg, s.image, `images/site${(i%10)+1}.jpg`);
+        btn.addEventListener('click', ()=> setSite(i));
         siteCardsContainer.appendChild(btn);
       });
     }
 
-    function setSite(index) {
+    function setSite(index){
+      if(!sites.length) return;
       currentSite = (index + sites.length) % sites.length;
       const s = sites[currentSite];
       siteName.textContent = s.name;
-      siteDept.textContent = s.dept;
-      siteCity.textContent = s.city;
-      siteDesc.textContent = s.description;
-      siteImg.src = s.image;
+      siteDept.textContent = s.dept || '—';
+      siteCity.textContent = s.city || '—';
+      siteDesc.textContent = s.description || '';
+      setImageWithFallback(siteImg, s.image, `images/site${currentSite%10+1}.jpg`);
       siteImg.alt = `Imagen de ${s.name}`;
-      [...siteCardsContainer.children].forEach((c) => {
-        const match = Number(c.getAttribute('data-index')) === currentSite;
+      [...siteCardsContainer.children].forEach((c)=> {
+        const match = Number(c.getAttribute('data-index'))===currentSite;
         c.classList.toggle('active', match);
-        c.setAttribute('aria-pressed', match ? 'true' : 'false');
+        if(match) c.scrollIntoView({behavior:'smooth', block:'center'});
       });
     }
+    sitePrev && sitePrev.addEventListener('click', ()=> setSite(currentSite-1));
+    siteNext && siteNext.addEventListener('click', ()=> setSite(currentSite+1));
 
-    // ======= CARRUSEL INTRO (Inicio) =======
-    (function(){
-      const slides = Array.from(document.querySelectorAll('#intro-carousel .intro-slide'));
-      const prevBtn = document.getElementById('intro-prev');
-      const nextBtn = document.getElementById('intro-next');
-      const indicators = document.getElementById('intro-indicators');
-      let idx = 0;
+    // inicializar datos y UI
+    async function initData(){ await fetchDepartments(); await fetchSites(); renderDeptCards(); if(departments.length) setDept(0); renderSiteCards(); if(sites.length) setSite(0); }
+    initData();
 
-      function renderIndicators(){
-        if(!indicators) return;
-        indicators.innerHTML = '';
-        slides.forEach((s,i)=> {
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'intro-ind';
-          btn.setAttribute('data-index', i);
-          btn.setAttribute('aria-label', `Ir a la diapositiva ${i+1}`);
-          btn.addEventListener('click', ()=> setSlide(i));
-          indicators.appendChild(btn);
-        });
-      }
-
-      function setSlide(i){
-        idx = (i + slides.length) % slides.length;
-        slides.forEach((s,si)=>{
-          const visible = si === idx;
-          s.style.opacity = visible ? '1' : '0';
-          s.style.pointerEvents = visible ? 'auto' : 'none';
-          s.setAttribute('aria-hidden', visible ? 'false' : 'true');
-        });
-        Array.from(indicators.children).forEach((b,bi)=> b.classList.toggle('active', bi===idx));
-      }
-
-      prevBtn && prevBtn.addEventListener('click', ()=> setSlide(idx-1));
-      nextBtn && nextBtn.addEventListener('click', ()=> setSlide(idx+1));
-
-      // teclado: izquierda/derecha cuando intro enfocado
-      const introSection = document.getElementById('intro-section');
-      introSection && introSection.addEventListener('keydown', (e)=>{
-        if(e.key === 'ArrowLeft') setSlide(idx-1);
-        if(e.key === 'ArrowRight') setSlide(idx+1);
-      });
-
-      // inicializar
-      renderIndicators();
-      setSlide(0);
-    })();
-
-    // Inicializar todo
-    renderDeptCards();
-    setDept(0);
-    renderSiteCards();
-    setSite(0);
-
-    // Accesibilidad básica: cambiar con teclas izquierda/derecha cuando el focus esté en el panel
-    document.getElementById('departments-panel').addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') setDept(currentDept - 1);
-      if (e.key === 'ArrowRight') setDept(currentDept + 1);
-    });
-    document.getElementById('sites-panel').addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') setSite(currentSite - 1);
-      if (e.key === 'ArrowRight') setSite(currentSite + 1);
-    });
+    // accesibilidad teclas
+    document.getElementById('departments-panel').addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') setDept(currentDept - 1); if (e.key === 'ArrowRight') setDept(currentDept + 1); });
+    document.getElementById('sites-panel').addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') setSite(currentSite - 1); if (e.key === 'ArrowRight') setSite(currentSite + 1); });
   </script>
 </body>
 </html>
